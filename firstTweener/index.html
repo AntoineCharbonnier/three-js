@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>First Tweener</title>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<div id="container"></div>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r72/three.js"></script>
+		<script src="http://antoinecharbonnier.fr/GreenSock-ShockinglyGreen-js/src/uncompressed/TimelineMax.js"></script>		
+		<script src="http://antoinecharbonnier.fr/GreenSock-ShockinglyGreen-js/src/uncompressed/TweenMax.js"></script>		
+
+<!--
+GO TO SEE :  
+http://www.clicktorelease.com/blog/vertex-displacement-noise-3d-webgl-glsl-three-js
+-->
+    <script type="x-shader/x-vertex" id="vertexShader">
+			varying vec2 vUv;
+			void main() {
+			    vUv = uv;
+			    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+			}
+    </script>
+
+    <script type="x-shader/x-fragment" id="fragmentShader">
+			varying vec2 vUv;
+			void main() {
+		    vUv = uv;
+		    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+			}
+    </script>
+    <!-- 
+		<script src="geometry.js"></script>
+		-->
+		<script src="main.js"></script>
+	</body>
+</html>

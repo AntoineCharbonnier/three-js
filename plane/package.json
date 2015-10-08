@@ -1,0 +1,23 @@
+{
+  "name": "home",
+  "version": "1.0.0",
+  "description": "Home animation",
+  "main": "server.js",
+  "scripts": {
+    "test": "gulp",
+    "start": "gulp"
+  },
+  "author": "Guillaume Rouxel",
+  "license": "ISC",
+  "dependencies": {
+    "jquery": "^2.1.4",
+    "leapjs": "^0.6.4",
+    "three-effectcomposer": "0.0.1"
+  },
+  "devDependencies": {
+    "browserify": "~4.2.0",
+    "gulp": "^3.9.0",
+    "vinyl-source-stream": "~0.1.1",
+    "watchify": "~0.10.2"
+  }
+}

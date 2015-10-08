@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Home animation ThreeJS + Leapmotion</title>
+
+	<link rel="stylesheet" href="css/screen.css">
+
+</head>
+<body>
+
+	<div id="indicator"></div>
+	
+	<script id="fragmentShader" type="x-shader/x-fragment">
+		
+
+		void main() {
+			gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+		}
+
+	</script>
+	<script type="x-shader/x-vertex" id="vertexShader">
+
+
+		float noise( float x, float y ) {
+
+			return ( 4.0 * sin( sqrt( x * x + y * y ) ) ) / sqrt( x * x + y * y );
+
+		}
+
+		uniform float time;
+
+		void main() {
+
+			vec3 vPosition = vec3( position.x, position.y, 0.0 );
+		  	vPosition.z = noise( position.x + time, position.y + time ) ;
+
+		  	gl_Position = projectionMatrix *
+		                	modelViewMatrix *
+		                	vec4(vPosition,1.0);
+		}
+
+    </script>
+	<script src="js/lib/three.min.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
