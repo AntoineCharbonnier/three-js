@@ -19,23 +19,57 @@ GO TO SEE :
 http://www.clicktorelease.com/blog/vertex-displacement-noise-3d-webgl-glsl-three-js
 -->
     <script type="x-shader/x-vertex" id="vertexShader">
-			varying vec2 vUv;
+			uniform float displacement;
+			varying vec3 vNormal;
+
 			void main() {
-			    vUv = uv;
-			    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+			  vNormal = normal;
+
+			  // push the displacement into the
+			  // three slots of a 3D vector so
+			  // it can be used in operations
+			  // with other 3D vectors like
+			  // positions and normals
+			  vec3 newPosition = position +
+			    normal * vec3(displacement);
+
+			  gl_Position = projectionMatrix *
+			                modelViewMatrix *
+			                vec4(newPosition, 1.0);
 			}
     </script>
 
     <script type="x-shader/x-fragment" id="fragmentShader">
-			varying vec2 vUv;
+			// same name and type as VS
+			varying vec3 vNormal;
+
 			void main() {
-		    vUv = uv;
-		    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+			  // calc the dot product and clamp
+			  // 0 -> 1 rather than -1 -> 1
+			  vec3 light = vec3(0.5, 0.2, 1.0);
+
+			  // ensure it's normalized
+			  light = normalize(light);
+
+			  // calculate the dot product of
+			  // the light to the vertex normal
+			  float dProd = max(0.0,
+			                    dot(vNormal, light));
+
+			  // feed into our frag colour
+			  gl_FragColor = vec4(dProd, // R
+			                      dProd, // G
+			                      dProd, // B
+			                      1.0);  // A
+
 			}
     </script>
     <!-- 
 		<script src="geometry.js"></script>
 		-->
+		<script src="OrbitControls.js"></script>
 		<script src="main.js"></script>
 	</body>
 </html>

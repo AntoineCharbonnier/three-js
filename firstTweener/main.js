@@ -5,10 +5,12 @@ var container,
     mesh,
     initial, 
     start = Date.now(),
-    fov = 30,
+    fov = 50,
     tick;
 
-window.addEventListener( 'load', function() {
+
+
+  window.addEventListener( 'load', function() {
 
   // grab the container from the DOM
   container = document.getElementById( "container" );
@@ -16,40 +18,72 @@ window.addEventListener( 'load', function() {
   container.addEventListener("mouseup", picDown,false)
 
 
-  // create a scene
+  /** SCENE **/
   scene = new THREE.Scene();
-  scene.fog = new THREE.Fog( 0x363d3d, 0, 1000 );
-  // scene.fog = new THREE.FogExp2( 0xefd1b5, 0.0025 );
+  scene.fog = new THREE.Fog( 0x0c0a4e, 1, 500 );
+  
+  scene.fog = new THREE.FogExp2( 0xefd1b5, 0.0025 );
   // create a camera the size of the browser window
   // and place it 100 units away, looking towards the center of the scene
+  
+  /** CAMERA **/
   camera = new THREE.PerspectiveCamera( 
     fov, 
     window.innerWidth / window.innerHeight, 
     1, 
     10000 );
   camera.position.z = 100;
-  
   camera.target = new THREE.Vector3( 0, 0, 0 );
-
   scene.add( camera );
 
-var lights = [];
-lights[0] = new THREE.PointLight( 0xffffff, 1, 0 );
-lights[1] = new THREE.PointLight( 0xffffff, 1, 0 );
-lights[2] = new THREE.PointLight( 0xffffff, 1, 0 );
 
-lights[0].position.set( 0, 200, 0 );
-lights[1].position.set( 100, 200, 100 );
-lights[2].position.set( -100, -200, -100 );
+  // controls = new THREE.OrbitControls( camera, container );
+  // //controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
+  // controls.enableDamping = true;
+  // controls.dampingFactor = 1;
+  // controls.enableZoom = false;
 
-scene.add( lights[0] );
-scene.add( lights[1] );
-// scene.add( lights[2] );
 
-geo =  new THREE.IcosahedronGeometry(10,4),
- mesh = new THREE.Object3D()
-      
-      mesh.add( new THREE.LineSegments(
+  /** LIGHT **/
+  var lights = [];
+  lights[0] = new THREE.PointLight( 0xffffff, 1, 0 );
+  lights[1] = new THREE.PointLight( 0xffffff, 1, 0 );
+  lights[2] = new THREE.PointLight( 0xffffff, 1, 0 );
+
+  lights[0].position.set( 0, 200, 0 );
+  lights[1].position.set( 100, 200, 100 );
+  lights[2].position.set( -100, -200, -100 );
+
+  scene.add( lights[0] );
+  scene.add( lights[1] );
+  // scene.add( lights[2] );
+
+
+  /** PLANE **/
+  var geometryPlane = new THREE.PlaneGeometry( window.innerWidth, window.innerHeight, 100, 100 );
+  var materialPlane = new THREE.MeshBasicMaterial( {color: 0xeeeeee, side: THREE.DoubleSide} );
+  var plane = new THREE.Mesh( geometryPlane, materialPlane );
+  plane.rotation.x = 90
+  plane.position.y -= 200
+  // scene.add( plane );
+
+
+  /** BOX **/
+  // var geometryBox = new THREE.BoxGeometry( 1000, 1000, 1000 );
+  // var materialBox = new THREE.MeshBasicMaterial( 
+  //   {
+  //     color: 0x00ff00, 
+  //     side: THREE.DoubleSide
+  //   } 
+  // );
+  // var cube = new THREE.Mesh( geometryBox, materialBox );
+  // scene.add( cube );
+
+  /** SPHERE WITH INNER LINES (hides) **/
+  geo =  new THREE.IcosahedronGeometry(10,4),
+   mesh = new THREE.Object3D()
+        
+        mesh.add( new THREE.LineSegments(
         
         new THREE.WireframeGeometry(geo),
         
@@ -77,6 +111,10 @@ geo =  new THREE.IcosahedronGeometry(10,4),
       ));
 
   scene.add( mesh );
+  // camera.lookAt( mesh )
+  // mesh.position.z += 30
+  mesh.position.y += 10
+
   
   // create the renderer and attach it to the DOM
   renderer = new THREE.WebGLRenderer();
@@ -90,9 +128,14 @@ geo =  new THREE.IcosahedronGeometry(10,4),
   render();
 } );
 
+
+/** Clamp a number **/
 function clamp(number ,max ,min){
   return Math.max(max,Math.min(min,number));
 };
+
+
+/** PicUp / PicDown **/
 
 function picUp(e){
   var vertices = mesh.children[1].geometry.vertices;
@@ -121,8 +164,8 @@ function picUp(e){
       },
       onUpdateParams: [i]
     })
+    }
   }
-}
 
 
 function picDown(e){
@@ -144,7 +187,7 @@ function picDown(e){
 }
 
 
-
+/** VITAL FUNCTION **/
 function render() {
   tick+=0.01;
   renderer.render( scene, camera );
